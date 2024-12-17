@@ -624,10 +624,13 @@ const renderspinner = function(parentEl) {
 };
 const showRecipe = async function() {
     try {
+        const id = window.location.hash.slice(1);
+        console.log(id);
+        if (!id) return;
         // Rendering Spinner
         renderspinner(recipeContainer);
         // Loding a recipe from API
-        const request = await fetch('https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886');
+        const request = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
         const data = await request.json();
         let { recipe } = data.data;
         console.log(recipe);
@@ -641,6 +644,7 @@ const showRecipe = async function() {
             cookingDuration: recipe.cooking_time,
             ingredients: recipe.ingredients
         };
+        console.log(recipe);
         console.log(recipe);
         // Rendering Recipe
         recipeContainer.innerHTML = '';
@@ -737,6 +741,10 @@ const showRecipe = async function() {
     }
 };
 showRecipe();
+[
+    'load',
+    'hashchange'
+].forEach((ev)=>window.addEventListener(ev, showRecipe));
 
 },{"core-js/modules/web.immediate.js":"49tUX","url:../img/icons.svg":"loVOp","regenerator-runtime/runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"49tUX":[function(require,module,exports,__globalThis) {
 'use strict';
