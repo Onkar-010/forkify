@@ -11,12 +11,13 @@
   "license": "ISC",
   "devDependencies": {
     "@parcel/transformer-sass": "^2.13.2",
-    "parcel": "^2.13.2"
+    "parcel": "^2.13.2",
+    "sass": "^1.83.0"
   },
   "dependencies": {
+    "@mischnic/json-sourcemap": "^0.1.1",
     "core-js": "^3.39.0",
     "fractional": "^1.0.0",
-    "regenerator-runtime": "^0.14.1",
-    "sass": "^1.83.0"
+    "regenerator-runtime": "^0.14.1"
   }
 }

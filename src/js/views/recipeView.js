@@ -14,6 +14,10 @@ class RecipeView {
     );
   }
 
+  addHandelerRender(handler) {
+    ['load', 'hashchange'].forEach(ev => window.addEventListener(ev, handler));
+  }
+
   // Render Spinner Funciton
   renderspinner() {
     const spinner = `<div class="spinner">
