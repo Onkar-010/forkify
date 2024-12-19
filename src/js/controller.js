@@ -33,7 +33,7 @@ const controlRecipes = async function () {
 
     // if (!request.ok) throw new Error(`${data.message} ${request.status}`);
   } catch (err) {
-    alert(`An Error Occured ${err.message}`);
+    recipeView.renderErrorMessage();
   }
 };
 
