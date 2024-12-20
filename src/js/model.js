@@ -3,13 +3,16 @@ import { getJson } from './helpers.js';
 
 export const state = {
   recipe: {},
+  search: {
+    query: ``,
+    results: [],
+  },
 };
 
 export const loadRecipe = async function (id) {
   try {
     const data = await getJson(`${API_URL}/${id}`);
     const { recipe } = data.data;
-    console.log(recipe);
     state.recipe = {
       id: recipe.id,
       title: recipe.title,
@@ -20,8 +23,34 @@ export const loadRecipe = async function (id) {
       cookingDuration: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
+  } catch (err) {
+    throw err;
+  }
+};
 
-    console.log(state.recipe);
+export const loadResult = async function (query) {
+  try {
+    console.log(`Enterned Model`);
+    const data = await getJson(`${API_URL}?search=${query}`);
+
+    data.data.recipes.map(res => {
+      state.search.results.push({
+        id: res.id,
+        title: res.title,
+        publisher: res.publisher,
+        image: res.image_url,
+      });
+    });
+
+    console.log(`Modified the State`);
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const resetResults = async function () {
+  try {
+    state.search.results = [];
   } catch (err) {
     throw err;
   }

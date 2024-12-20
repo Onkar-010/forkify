@@ -1,76 +1,23 @@
+import Views from './view.js';
+
 import icon from 'url:../../img/icons.svg';
 import { Fraction } from 'fractional';
 
-class RecipeView {
-  #parentElement = document.querySelector('.recipe');
-  #data;
-  #errorMessage = `We could not find that Recipe. Please try another one!`;
-  #message = `Start by searching for a recipe or an ingredient. Have fun!`;
-
-  render(data) {
-    this.#data = data;
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML(
-      'afterbegin',
-      this.#generateMarkup()
-    );
-  }
-
-  renderErrorMessage(message = this.#errorMessage) {
-    const markup = `
-        <div class="error">
-          <div>
-            <svg>
-              <use href="${icon}#icon-alert-triangle"></use>
-            </svg>
-          </div>
-          <p>${message}</p>
-        </div>
-      `;
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
-
-  renderMessage(message = this.#message) {
-    const markup = `
-        <div class="error">
-          <div>
-            <svg>
-              <use href="${icon}#icon-smile"></use>
-            </svg>
-          </div>
-          <p>${message}</p>
-        </div>
-      `;
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
+class RecipeView extends Views {
+  _parentElement = document.querySelector('.recipe');
+  _data;
+  _errorMessage = `We could not find that Recipe. Please try another one!`;
+  _message = `Start by searching for a recipe or an ingredient. Have fun!`;
 
   addHandelerRender(handler) {
     ['load', 'hashchange'].forEach(ev => window.addEventListener(ev, handler));
   }
 
-  // Render Spinner Funciton
-  renderspinner() {
-    const spinner = `<div class="spinner">
-            <svg>
-              <use href="${icon}#icon-loader"></use>
-            </svg>
-          </div>`;
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', spinner);
-  }
-
-  #clear() {
-    this.#parentElement.innerHTML = '';
-  }
-
-  #generateMarkup() {
-    console.log(this.#data);
+  _generateMarkup() {
     return `<figure class="recipe__fig">
-          <img src="${this.#data.image}" alt="Tomato" class="recipe__img" />
+          <img src="${this._data.image}" alt="Tomato" class="recipe__img" />
           <h1 class="recipe__title">
-            <span>${this.#data.title}</span>
+            <span>${this._data.title}</span>
           </h1>
         </figure>
 
@@ -80,7 +27,7 @@ class RecipeView {
               <use href="${icon}#icon-clock"></use>
             </svg>
             <span class="recipe__info-data recipe__info-data--minutes">${
-              this.#data.cookingDuration
+              this._data.cookingDuration
             }</span>
             <span class="recipe__info-text">minutes</span>
           </div>
@@ -89,7 +36,7 @@ class RecipeView {
               <use href="${icon}#icon-users"></use>
             </svg>
             <span class="recipe__info-data recipe__info-data--people">${
-              this.#data.servings
+              this._data.servings
             }</span>
             <span class="recipe__info-text">servings</span>
 
@@ -122,7 +69,7 @@ class RecipeView {
         <div class="recipe__ingredients">
           <h2 class="heading--2">Recipe ingredients</h2>
           <ul class="recipe__ingredient-list">
-          ${this.#data.ingredients
+          ${this._data.ingredients
             .map(ing => {
               return `<li class="recipe__ingredient">
               <svg class="recipe__icon">
@@ -148,13 +95,13 @@ class RecipeView {
           <p class="recipe__directions-text">
             This recipe was carefully designed and tested by
             <span class="recipe__publisher">${
-              this.#data.publisher
+              this._data.publisher
             }</span>. Please check out
             directions at their website.
           </p>
           <a
             class="btn--small recipe__btn"
-            href="${this.#data.sourceUrl}"
+            href="${this._data.sourceUrl}"
             target="_blank"
           >
             <span>Directions</span>
