@@ -48,6 +48,13 @@ export const loadResult = async function (query) {
   }
 };
 
+export const UpdateServing = function (newServing) {
+  state.recipe.ingredients.forEach(ing => {
+    ing.quantity = (ing.quantity * newServing) / state.recipe.servings;
+  });
+  state.recipe.servings = newServing;
+};
+
 export const resetResults = async function () {
   try {
     state.search.results = [];

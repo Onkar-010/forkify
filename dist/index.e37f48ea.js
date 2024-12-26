@@ -653,8 +653,15 @@ const controlPaginationBtn = function(goTo) {
     (0, _resultsViewJsDefault.default).render(_modelJs.getResultPage(goTo));
     (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
 };
+const controlUpdatingServing = function(newServing) {
+    // Updating the Serving Property
+    _modelJs.UpdateServing(newServing);
+    // Rendering Recipe
+    (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
+};
 const init = function() {
     (0, _recipeViewJsDefault.default).addHandelerRender(controlRecipes);
+    (0, _recipeViewJsDefault.default).addHandlerUpdateServing(controlUpdatingServing);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResult);
     (0, _paginationViewJsDefault.default).addHandlerclcik(controlPaginationBtn);
 };
@@ -1918,6 +1925,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state);
 parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
 parcelHelpers.export(exports, "loadResult", ()=>loadResult);
+parcelHelpers.export(exports, "UpdateServing", ()=>UpdateServing);
 parcelHelpers.export(exports, "resetResults", ()=>resetResults);
 parcelHelpers.export(exports, "getResultPage", ()=>getResultPage);
 var _configJs = require("./config.js");
@@ -1963,6 +1971,12 @@ const loadResult = async function(query) {
     } catch (err) {
         throw err;
     }
+};
+const UpdateServing = function(newServing) {
+    state.recipe.ingredients.forEach((ing)=>{
+        ing.quantity = ing.quantity * newServing / state.recipe.servings;
+    });
+    state.recipe.servings = newServing;
 };
 const resetResults = async function() {
     try {
@@ -2063,6 +2077,15 @@ class RecipeView extends (0, _viewJsDefault.default) {
             'hashchange'
         ].forEach((ev)=>window.addEventListener(ev, handler));
     }
+    addHandlerUpdateServing(handler) {
+        this._parentElement.addEventListener('click', function(e) {
+            const updateServingBtn = e.target.closest('.btn--updating-servings');
+            const updateTo = +updateServingBtn.dataset.updateTo;
+            console.log(updateTo);
+            if (!updateServingBtn) return;
+            handler(updateTo);
+        });
+    }
     _generateMarkup() {
         return `<figure class="recipe__fig">
           <img src="${this._data.image}" alt="Tomato" class="recipe__img" />
@@ -2087,12 +2110,12 @@ class RecipeView extends (0, _viewJsDefault.default) {
             <span class="recipe__info-text">servings</span>
 
             <div class="recipe__info-buttons">
-              <button class="btn--tiny btn--increase-servings">
+              <button class="btn--tiny btn--updating-servings"  data-update-to="${this._data.servings > 1 ? this._data.servings - 1 : this._data.servings}">
                 <svg>
                   <use href="${0, _iconsSvgDefault.default}#icon-minus-circle"></use>
                 </svg>
               </button>
-              <button class="btn--tiny btn--increase-servings">
+              <button class="btn--tiny btn--updating-servings" data-update-to="${this._data.servings + 1}">
                 <svg>
                   <use href="${0, _iconsSvgDefault.default}#icon-plus-circle"></use>
                 </svg>
@@ -2116,6 +2139,7 @@ class RecipeView extends (0, _viewJsDefault.default) {
           <h2 class="heading--2">Recipe ingredients</h2>
           <ul class="recipe__ingredient-list">
           ${this._data.ingredients.map((ing)=>{
+            console.log(ing);
             return `<li class="recipe__ingredient">
               <svg class="recipe__icon">
                 <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
