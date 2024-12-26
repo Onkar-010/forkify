@@ -13,7 +13,7 @@ class ResultView extends Views {
 
   _generatePreview(res) {
     return `<li class="preview">
-            <a class="preview__link preview__link--active" href="#${res.id}">
+            <a class="preview__link" href="#${res.id}">
               <figure class="preview__fig">
                 <img src="${res.image}" alt="${res.title}" />
               </figure>

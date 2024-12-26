@@ -1,4 +1,5 @@
-import { API_URL } from './config.js';
+//
+import { API_URL, RES_PER_PAGE } from './config.js';
 import { getJson } from './helpers.js';
 
 export const state = {
@@ -6,6 +7,8 @@ export const state = {
   search: {
     query: ``,
     results: [],
+    page: 1,
+    resultPerPage: RES_PER_PAGE,
   },
 };
 
@@ -30,7 +33,6 @@ export const loadRecipe = async function (id) {
 
 export const loadResult = async function (query) {
   try {
-    console.log(`Enterned Model`);
     const data = await getJson(`${API_URL}?search=${query}`);
 
     data.data.recipes.map(res => {
@@ -41,8 +43,6 @@ export const loadResult = async function (query) {
         image: res.image_url,
       });
     });
-
-    console.log(`Modified the State`);
   } catch (err) {
     throw err;
   }
@@ -54,4 +54,12 @@ export const resetResults = async function () {
   } catch (err) {
     throw err;
   }
+};
+
+export const getResultPage = function (page = state.search.page) {
+  state.search.page = page;
+
+  const start = (page - 1) * state.search.resultPerPage;
+  const end = page * state.search.resultPerPage;
+  return state.search.results.slice(start, end);
 };
