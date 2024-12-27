@@ -15,6 +15,32 @@ export default class Views {
     );
   }
 
+  update(data) {
+    this._data = data;
+    const newDOM = document
+      .createRange()
+      .createContextualFragment(this._generateMarkup());
+
+    const newElements = Array.from(newDOM.querySelectorAll('*'));
+    const curElement = Array.from(this._parentElement.querySelectorAll('*'));
+    newElements.forEach((newEl, i) => {
+      const curEl = curElement[i];
+      // Update Changed Text
+      if (
+        !newEl.isEqualNode(curEl) &&
+        newEl.firstChild?.nodeValue.trim() !== ''
+      ) {
+        curEl.textContent = newEl.textContent;
+      }
+      // Update Changed DataSet
+      if (!newEl.isEqualNode(curEl)) {
+        Array.from(newEl.attributes).forEach(attr =>
+          curEl.setAttribute(attr.name, attr.value)
+        );
+      }
+    });
+  }
+
   renderErrorMessage(message = this._errorMessage) {
     const markup = `
         <div class="error">

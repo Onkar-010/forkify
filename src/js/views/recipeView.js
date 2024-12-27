@@ -17,7 +17,6 @@ class RecipeView extends Views {
     this._parentElement.addEventListener('click', function (e) {
       const updateServingBtn = e.target.closest('.btn--updating-servings');
       const updateTo = +updateServingBtn.dataset.updateTo;
-      console.log(updateTo);
       if (!updateServingBtn) return;
       handler(updateTo);
     });
@@ -87,7 +86,6 @@ class RecipeView extends Views {
           <ul class="recipe__ingredient-list">
           ${this._data.ingredients
             .map(ing => {
-              console.log(ing);
               return `<li class="recipe__ingredient">
               <svg class="recipe__icon">
                 <use href="${icon}#icon-check"></use>

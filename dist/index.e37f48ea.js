@@ -618,6 +618,8 @@ const controlRecipes = async function() {
         const id = window.location.hash.slice(1);
         console.log(id);
         if (!id) return;
+        // update Result Veiw to mark search result
+        (0, _resultsViewJsDefault.default).update(_modelJs.getResultPage());
         // Rendering Spinner
         (0, _recipeViewJsDefault.default).renderspinner();
         // Loding a recipe from API
@@ -656,8 +658,9 @@ const controlPaginationBtn = function(goTo) {
 const controlUpdatingServing = function(newServing) {
     // Updating the Serving Property
     _modelJs.UpdateServing(newServing);
-    // Rendering Recipe
-    (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
+    // Updating Recipe
+    // recipeView.render(model.state.recipe);
+    (0, _recipeViewJsDefault.default).update(_modelJs.state.recipe);
 };
 const init = function() {
     (0, _recipeViewJsDefault.default).addHandelerRender(controlRecipes);
@@ -2081,7 +2084,6 @@ class RecipeView extends (0, _viewJsDefault.default) {
         this._parentElement.addEventListener('click', function(e) {
             const updateServingBtn = e.target.closest('.btn--updating-servings');
             const updateTo = +updateServingBtn.dataset.updateTo;
-            console.log(updateTo);
             if (!updateServingBtn) return;
             handler(updateTo);
         });
@@ -2139,7 +2141,6 @@ class RecipeView extends (0, _viewJsDefault.default) {
           <h2 class="heading--2">Recipe ingredients</h2>
           <ul class="recipe__ingredient-list">
           ${this._data.ingredients.map((ing)=>{
-            console.log(ing);
             return `<li class="recipe__ingredient">
               <svg class="recipe__icon">
                 <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
@@ -2481,6 +2482,19 @@ class Views {
         this._data = data;
         this._clear();
         this._parentElement.insertAdjacentHTML('afterbegin', this._generateMarkup());
+    }
+    update(data) {
+        this._data = data;
+        const newDOM = document.createRange().createContextualFragment(this._generateMarkup());
+        const newElements = Array.from(newDOM.querySelectorAll('*'));
+        const curElement = Array.from(this._parentElement.querySelectorAll('*'));
+        newElements.forEach((newEl, i)=>{
+            const curEl = curElement[i];
+            // Update Changed Text
+            if (!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue.trim() !== '') curEl.textContent = newEl.textContent;
+            // Update Changed DataSet
+            if (!newEl.isEqualNode(curEl)) Array.from(newEl.attributes).forEach((attr)=>curEl.setAttribute(attr.name, attr.value));
+        });
     }
     renderErrorMessage(message = this._errorMessage) {
         const markup = `
@@ -3150,8 +3164,9 @@ class ResultView extends (0, _viewDefault.default) {
         return this._data.map(this._generatePreview).join('');
     }
     _generatePreview(res) {
+        const id = window.location.hash.slice(1);
         return `<li class="preview">
-            <a class="preview__link" href="#${res.id}">
+            <a class="preview__link ${res.id === id ? 'preview__link--active' : ''}" href="#${res.id}">
               <figure class="preview__fig">
                 <img src="${res.image}" alt="${res.title}" />
               </figure>
