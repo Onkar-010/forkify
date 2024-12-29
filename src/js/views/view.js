@@ -9,7 +9,6 @@ export default class Views {
       return this.renderErrorMessage();
 
     this._data = data;
-    console.log(this._data);
     const markup = this._generateMarkup();
     if (!render) return markup;
 

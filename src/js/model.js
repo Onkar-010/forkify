@@ -1,6 +1,6 @@
 //
-import { API_URL, RES_PER_PAGE, INITIAL_PAGE } from './config.js';
-import { getJson } from './helpers.js';
+import { API_URL, RES_PER_PAGE, INITIAL_PAGE, KEY } from './config.js';
+import { getJson, sendJson } from './helpers.js';
 
 export const state = {
   recipe: {},
@@ -13,20 +13,26 @@ export const state = {
   bookmarked: [],
 };
 
+const changeStateObj = function (data) {
+  const { recipe } = data.data;
+  return {
+    id: recipe.id,
+    title: recipe.title,
+    publisher: recipe.publisher,
+    sourceUrl: recipe.source_url,
+    image: recipe.image_url,
+    servings: recipe.servings,
+    cookingDuration: recipe.cooking_time,
+    ingredients: recipe.ingredients,
+    ...(recipe.key && { key: recipe.key }),
+  };
+};
+
 export const loadRecipe = async function (id) {
   try {
-    const data = await getJson(`${API_URL}/${id}`);
-    const { recipe } = data.data;
-    state.recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      publisher: recipe.publisher,
-      sourceUrl: recipe.source_url,
-      image: recipe.image_url,
-      servings: recipe.servings,
-      cookingDuration: recipe.cooking_time,
-      ingredients: recipe.ingredients,
-    };
+    const data = await getJson(`${API_URL}/${id}?key=${KEY}`);
+    state.recipe = changeStateObj(data);
+
     if (state.bookmarked.some(ele => ele.id === id))
       state.recipe.bookmarked = true;
     else state.recipe.bookmarked = false;
@@ -37,7 +43,7 @@ export const loadRecipe = async function (id) {
 
 export const loadResult = async function (query) {
   try {
-    const data = await getJson(`${API_URL}?search=${query}`);
+    const data = await getJson(`${API_URL}?search=${query}&key=${KEY}`);
 
     data.data.recipes.map(res => {
       state.search.results.push({
@@ -45,6 +51,7 @@ export const loadResult = async function (query) {
         title: res.title,
         publisher: res.publisher,
         image: res.image_url,
+        ...(res.key && { key: res.key }),
       });
     });
   } catch (err) {
@@ -111,9 +118,47 @@ const init = function () {
   if (storage) state.bookmarked = JSON.parse(storage);
 };
 
-init();
+// init();
 
 const clearbookmarks = function () {
   localStorage.clear('bookmarks');
 };
-// clearbookmarks();
+clearbookmarks();
+
+export const uploadRecipe = async function (newRecipe) {
+  try {
+    const ingredients = Object.entries(newRecipe)
+      .filter(entry => entry[0].startsWith('ingredient') && entry[1] !== '')
+      .map(ing => {
+        const ingArr = ing[1].replaceAll(' ', '').split(',');
+        if (ingArr.length !== 3)
+          throw new Error(
+            'Wrong Ingredient  format! Please use the Correct Format'
+          );
+        const [quantity, unit, description] = ingArr;
+        return {
+          quantity: quantity ? +quantity : null,
+          unit: !unit ? '' : unit,
+          description,
+        };
+      });
+
+    const recipe = {
+      title: newRecipe.title,
+      publisher: newRecipe.publisher,
+      source_url: newRecipe.sourceUrl,
+      image_url: newRecipe.image,
+      servings: newRecipe.servings,
+      cooking_time: newRecipe.cookingTime,
+      ingredients,
+    };
+
+    // console.log(recipe);
+
+    const data = await sendJson(`${API_URL}?key=${KEY}`, recipe);
+    state.recipe = changeStateObj(data);
+    addBookmark(state.recipe);
+  } catch (err) {
+    throw err;
+  }
+};
