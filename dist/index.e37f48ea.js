@@ -3410,7 +3410,7 @@ class PaginationView extends (0, _viewJsDefault.default) {
         // Last Page
         if (numPage > 1 && curPage === numPage) return this._generatePrevBtnMarkup(curPage);
         // second Pageand other Pages
-        if (numPage > 1 && curPage > 1 && curPage < numPage) return this._generatePrevBtnMarkup(curPage) + this._generateNextBtnMarkup(curPage);
+        if (numPage > 1 && curPage > 1 && curPage < numPage) return this._generatePrevBtnMarkup(curPage) + this._generateCurPageIconMarkup(curPage) + this._generateNextBtnMarkup(curPage);
     }
     _generatePrevBtnMarkup(curPage) {
         return `<button data-goTo="${curPage - 1}"class="btn--inline pagination__btn--prev">
@@ -3428,6 +3428,14 @@ class PaginationView extends (0, _viewJsDefault.default) {
               <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
             </svg>
           </button>
+          `;
+    }
+    _generateCurPageIconMarkup(curPage) {
+        return `
+             <span
+            class="currentPage"
+            >${curPage}</span
+          >
           `;
     }
 }

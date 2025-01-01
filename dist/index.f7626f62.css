@@ -497,22 +497,30 @@ body {
 }
 
 .pagination {
+  justify-content: space-around;
   margin-top: auto;
-  padding: 0 3.5rem;
+  display: flex;
 }
 
 .pagination:after {
-  content: "";
   clear: both;
-  display: table;
 }
 
-.pagination__btn--prev {
-  float: left;
-}
-
-.pagination__btn--next {
-  float: right;
+.currentPage {
+  color: #f3ebe9;
+  background-color: #0000;
+  background-image: linear-gradient(to bottom right, #fbdb89, #f48982);
+  background-position: 0 0;
+  background-repeat: repeat;
+  background-size: auto;
+  background-attachment: scroll;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border: 2px solid #0000;
+  border-radius: 100px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .copyright {

@@ -39,6 +39,7 @@ class PaginationView extends Views {
     if (numPage > 1 && curPage > 1 && curPage < numPage) {
       return (
         this._generatePrevBtnMarkup(curPage) +
+        this._generateCurPageIconMarkup(curPage) +
         this._generateNextBtnMarkup(curPage)
       );
     }
@@ -65,6 +66,15 @@ class PaginationView extends Views {
               <use href="${icon}#icon-arrow-right"></use>
             </svg>
           </button>
+          `;
+  }
+
+  _generateCurPageIconMarkup(curPage) {
+    return `
+             <span
+            class="currentPage"
+            >${curPage}</span
+          >
           `;
   }
 }
