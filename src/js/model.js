@@ -75,9 +75,28 @@ export const resetResults = async function () {
   }
 };
 
-export const getResultPage = function (page = state.search.page) {
-  state.search.page = page;
+/**
+ * @name getCooktime()
+ * @description:- This Function loop over the state.search.results Array and
+ *                based on id present in each ele,we make an API Call for that
+ *                recipe to get it's CookTime and add it to the Respective element
+ */
+const getCooktime = async function () {
+  try {
+    const updates = state.search.results.map(async res => {
+      const data = await getJson(`${API_URL}/${res.id}?key=${KEY}`);
+      res.cookTime = data.data.recipe.cooking_time; // Add cookTime to the recipe object
+    });
+    await Promise.all(updates); // Ensure all asynchronous updates complete
+  } catch (err) {
+    console.error('Error retrieving cooking times:', err);
+    throw err;
+  }
+};
 
+export const getResultPage = function (page = state.search.page) {
+  getCooktime();
+  state.search.page = page;
   const start = (page - 1) * state.search.resultPerPage;
   const end = page * state.search.resultPerPage;
   return state.search.results.slice(start, end);

@@ -250,6 +250,11 @@ body {
   line-height: 1.5;
 }
 
+.sortBtn {
+  cursor: pointer;
+  width: fit-content;
+}
+
 .header {
   background-color: #f9f5f3;
   grid-area: head;

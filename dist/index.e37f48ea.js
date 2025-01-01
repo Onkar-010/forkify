@@ -717,7 +717,7 @@ const init = function() {
 };
 init();
 
-},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","./views/recipeView.js":"l60JC","./views/searchView.js":"9OQAM","./views/resultsView.js":"cSbZE","./views/bookmark.js":"Tdyin","./views/paginationView.js":"6z7bi","./views/addRecipeView.js":"i6DNj","regenerator-runtime/runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./config.js":"k5Hzs"}],"49tUX":[function(require,module,exports,__globalThis) {
+},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","./views/recipeView.js":"l60JC","./views/searchView.js":"9OQAM","./views/resultsView.js":"cSbZE","./views/bookmark.js":"Tdyin","./views/paginationView.js":"6z7bi","./views/addRecipeView.js":"i6DNj","./config.js":"k5Hzs","regenerator-runtime/runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"49tUX":[function(require,module,exports,__globalThis) {
 'use strict';
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -2051,7 +2051,25 @@ const resetResults = async function() {
         throw err;
     }
 };
+/**
+ * @name getCooktime()
+ * @description:- This Function loop over the state.search.results Array and
+ *                based on id present in each ele,we make an API Call for that
+ *                recipe to get it's CookTime and add it to the Respective element
+ */ const getCooktime = async function() {
+    try {
+        const updates = state.search.results.map(async (res)=>{
+            const data = await (0, _helpersJs.getJson)(`${(0, _configJs.API_URL)}/${res.id}?key=${(0, _configJs.KEY)}`);
+            res.cookTime = data.data.recipe.cooking_time; // Add cookTime to the recipe object
+        });
+        await Promise.all(updates); // Ensure all asynchronous updates complete
+    } catch (err) {
+        console.error('Error retrieving cooking times:', err);
+        throw err;
+    }
+};
 const getResultPage = function(page = state.search.page) {
+    getCooktime();
     state.search.page = page;
     const start = (page - 1) * state.search.resultPerPage;
     const end = page * state.search.resultPerPage;
