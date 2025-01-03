@@ -1,5 +1,6 @@
 import * as model from './model.js';
 import recipeView from './views/recipeView.js';
+import sortView from './views/sortView.js';
 import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
 import bookmarkView from './views/bookmark.js';
@@ -42,6 +43,7 @@ const controlRecipes = async function () {
     const recipe = model.state.recipe;
 
     // Rendering Recipe
+
     recipeView.render(model.state.recipe);
 
     // if (!request.ok) throw new Error(`${data.message} ${request.status}`);
@@ -65,6 +67,9 @@ const controlSearchResult = async function () {
     await model.loadResult(query);
 
     // Render the intial ResultView and Pagination Btn
+    // debugger;
+
+    sortView.render(model.state.search);
     resultsView.render(model.getResultPage(model.state.search.page));
     paginationView.render(model.state.search);
   } catch (err) {}
@@ -135,6 +140,15 @@ const controlRecipeUpload = async function (newRecipe) {
   }
 };
 
+const controlSortting = function (sortState) {
+  // Change sort state in model
+  model.state.search.sort = sortState;
+  // update the dataset in sortBtn
+  sortView.update(model.state.search);
+  // update the Results view
+  resultsView.update(model.getResultPage());
+};
+
 const init = function () {
   recipeView.addHandelerRender(controlRecipes);
   recipeView.addHandlerUpdateServing(controlUpdatingServing);
@@ -143,6 +157,7 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResult);
   paginationView.addHandlerclcik(controlPaginationBtn);
   addRecipeView._addHandlerUpload(controlRecipeUpload);
+  sortView.addHandlerSortBtn(controlSortting);
   // addRecipeView._addHandlerOpenModel();
   // addRecipeView._addHandlerCloseModel();
 };

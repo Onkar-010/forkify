@@ -10,6 +10,7 @@ export default class Views {
 
     this._data = data;
     const markup = this._generateMarkup();
+
     if (!render) return markup;
 
     this._clear();
@@ -18,6 +19,7 @@ export default class Views {
 
   update(data) {
     this._data = data;
+    console.log(`Update Query called`);
     const newDOM = document
       .createRange()
       .createContextualFragment(this._generateMarkup());

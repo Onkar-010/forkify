@@ -1,4 +1,5 @@
 //
+import { isArray } from 'core-js/es/array';
 import { API_URL, RES_PER_PAGE, INITIAL_PAGE, KEY } from './config.js';
 import { getJson, sendJson } from './helpers.js';
 
@@ -9,6 +10,7 @@ export const state = {
     results: [],
     page: 1,
     resultPerPage: RES_PER_PAGE,
+    sort: false,
   },
   bookmarked: [],
 };
@@ -54,6 +56,17 @@ export const loadResult = async function (query) {
         ...(res.key && { key: res.key }),
       });
     });
+
+    // fetching the Cooktime and IngredientReq and Adding it to result
+    await Promise.all(
+      state.search.results.map(async res => {
+        // Fetch each recipe in result
+        const data = await getJson(`${API_URL}/${res.id}?key=${KEY}`);
+        // Adding it's Cooktime and IngReq to respect resultrecipe
+        res.CookTime = data.data.recipe.cooking_time;
+        res.ingredientsReq = data.data.recipe.ingredients.length;
+      })
+    );
   } catch (err) {
     throw err;
   }
@@ -69,37 +82,32 @@ export const UpdateServing = function (newServing) {
 export const resetResults = async function () {
   try {
     state.search.results = [];
+    state.search.sort = false;
     state.search.page = INITIAL_PAGE;
   } catch (err) {
     throw err;
   }
 };
 
-/**
- * @name getCooktime()
- * @description:- This Function loop over the state.search.results Array and
- *                based on id present in each ele,we make an API Call for that
- *                recipe to get it's CookTime and add it to the Respective element
- */
-const getCooktime = async function () {
-  try {
-    const updates = state.search.results.map(async res => {
-      const data = await getJson(`${API_URL}/${res.id}?key=${KEY}`);
-      res.cookTime = data.data.recipe.cooking_time; // Add cookTime to the recipe object
-    });
-    await Promise.all(updates); // Ensure all asynchronous updates complete
-  } catch (err) {
-    console.error('Error retrieving cooking times:', err);
-    throw err;
+const sortedArr = function (arr) {
+  if (state.search.sort) {
+    console.log(`Entered Sort Function`);
+    const newarr = [...arr].sort((a, b) => a.CookTime - b.CookTime);
+    return newarr;
+  } else {
+    return state.search.results;
   }
 };
 
 export const getResultPage = function (page = state.search.page) {
-  getCooktime();
   state.search.page = page;
+  console.log(state.search.sort);
+  const results = sortedArr(state.search.results);
+  // const results = state.search.results;
+
   const start = (page - 1) * state.search.resultPerPage;
   const end = page * state.search.resultPerPage;
-  return state.search.results.slice(start, end);
+  return results.slice(start, end);
 };
 
 const pressitData = function () {
@@ -137,12 +145,12 @@ const init = function () {
   if (storage) state.bookmarked = JSON.parse(storage);
 };
 
-// init();
+init();
 
 const clearbookmarks = function () {
   localStorage.clear('bookmarks');
 };
-clearbookmarks();
+// clearbookmarks();
 
 export const uploadRecipe = async function (newRecipe) {
   try {
