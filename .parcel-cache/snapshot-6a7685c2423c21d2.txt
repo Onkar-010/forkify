@@ -1,4 +1,5 @@
-9093
+9094
+86/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/.gitignore1737547496231579921 0
 86/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/index.html1735909913634291234 0
 83/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/src/img1735907913607701621 1
 96/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/src/js/controller.js1735909926396454308 0
@@ -13,7 +14,7 @@
 97/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/src/sass/_upload.scss1735907913610701677 0
 95/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/src/sass/_base.scss1735907913609701659 0
 84/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/src/sass1735907913610701677 1
-79/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/src1735907913609701659 1
+79/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/src1737547436699536649 1
 112/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/node_modules/is-extglob/package.json1735907913192693885 0
 108/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/node_modules/is-extglob/index.js1735907913192693885 0
 112/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/node_modules/micromatch/package.json1735907913427698266 0
@@ -7054,7 +7055,7 @@
 109/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/node_modules/core-js/full/self.js1735907912960689560 0
 124/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/node_modules/core-js/full/weak-set/delete-all.js1735907912970689746 0
 120/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/node_modules/core-js/actual/string/search.js1735907912873687938 0
-75/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify1735907913606701603 1
+75/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify1737547436699536649 1
 118/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/node_modules/core-js/full/weak-set/from.js1735907912970689746 0
 121/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/node_modules/core-js/full/math/rad-per-deg.js1735907912953689429 0
 122/home/onkar/WEB Devlopment project/Course Project/git-clone-forkify/forkify/node_modules/core-js/actual/instance/concat.js1735907912861687714 0
